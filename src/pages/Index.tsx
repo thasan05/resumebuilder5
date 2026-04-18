@@ -8,10 +8,12 @@ import ResumePreview from "@/components/resume/ResumePreview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Sparkles, RotateCcw, User, GraduationCap, Briefcase, Wrench, Eye, Pencil } from "lucide-react";
+import { Sparkles, RotateCcw, User, GraduationCap, Briefcase, Wrench, Eye, Pencil, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
 const ResumeBuilderContent = () => {
   const { resetResume } = useResume();
+  const { theme, toggleTheme } = useTheme();
   const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
 
   return (
@@ -34,10 +36,21 @@ const ResumeBuilderContent = () => {
               <p className="hidden sm:block text-[11px] text-muted-foreground">Craft a stunning resume in minutes</p>
             </div>
           </div>
-          <Button variant="outline" size="sm" onClick={resetResume} className="gap-1.5 rounded-full">
-            <RotateCcw className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Reset</span>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={toggleTheme}
+              className="rounded-full h-9 w-9"
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+            <Button variant="outline" size="sm" onClick={resetResume} className="gap-1.5 rounded-full">
+              <RotateCcw className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Reset</span>
+            </Button>
+          </div>
         </div>
         {/* Mobile view toggle */}
         <div className="lg:hidden flex border-t border-border/50">
