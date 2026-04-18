@@ -4,9 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skill } from "@/types/resume";
 import { Plus, Trash2, Wrench } from "lucide-react";
+import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors, DragEndEvent } from "@dnd-kit/core";
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
+import { SortableItem } from "./SortableItem";
 
 const SkillsForm = () => {
   const { resumeData, setResumeData } = useResume();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   const addSkill = () => {
     const newSkill: Skill = { id: crypto.randomUUID(), name: "", level: "intermediate" };
@@ -24,6 +32,17 @@ const SkillsForm = () => {
     setResumeData((prev) => ({ ...prev, skills: prev.skills.filter((s) => s.id !== id) }));
   };
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setResumeData((prev) => {
+        const oldIndex = prev.skills.findIndex((s) => s.id === active.id);
+        const newIndex = prev.skills.findIndex((s) => s.id === over.id);
+        return { ...prev, skills: arrayMove(prev.skills, oldIndex, newIndex) };
+      });
+    }
+  };
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -37,32 +56,40 @@ const SkillsForm = () => {
           <Plus className="h-4 w-4" /> Add
         </Button>
       </div>
-      <div className="space-y-2">
-        {resumeData.skills.map((skill) => (
-          <div key={skill.id} className="flex items-center gap-2 p-2 rounded-xl border border-border/60 bg-card shadow-soft animate-fade-in">
-            <Input
-              value={skill.name}
-              onChange={(e) => updateSkill(skill.id, "name", e.target.value)}
-              placeholder="Skill name"
-              className="flex-1 rounded-lg border-0 bg-background"
-            />
-            <Select value={skill.level} onValueChange={(val) => updateSkill(skill.id, "level", val)}>
-              <SelectTrigger className="w-28 sm:w-36 rounded-lg border-0 bg-background">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                <SelectItem value="beginner">Beginner</SelectItem>
-                <SelectItem value="intermediate">Intermediate</SelectItem>
-                <SelectItem value="advanced">Advanced</SelectItem>
-                <SelectItem value="expert">Expert</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button variant="ghost" size="icon" onClick={() => removeSkill(skill.id)} className="h-9 w-9 shrink-0 hover:bg-destructive/10">
-              <Trash2 className="h-4 w-4 text-destructive" />
-            </Button>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={resumeData.skills.map((s) => s.id)} strategy={verticalListSortingStrategy}>
+          <div className="space-y-2">
+            {resumeData.skills.map((skill) => (
+              <SortableItem
+                key={skill.id}
+                id={skill.id}
+                className="relative flex items-center gap-2 pl-8 pr-2 py-2 rounded-xl border border-border/60 bg-card shadow-soft animate-fade-in"
+              >
+                <Input
+                  value={skill.name}
+                  onChange={(e) => updateSkill(skill.id, "name", e.target.value)}
+                  placeholder="Skill name"
+                  className="flex-1 rounded-lg border-0 bg-background"
+                />
+                <Select value={skill.level} onValueChange={(val) => updateSkill(skill.id, "level", val)}>
+                  <SelectTrigger className="w-28 sm:w-36 rounded-lg border-0 bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="beginner">Beginner</SelectItem>
+                    <SelectItem value="intermediate">Intermediate</SelectItem>
+                    <SelectItem value="advanced">Advanced</SelectItem>
+                    <SelectItem value="expert">Expert</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button variant="ghost" size="icon" onClick={() => removeSkill(skill.id)} className="h-9 w-9 shrink-0 hover:bg-destructive/10">
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </Button>
+              </SortableItem>
+            ))}
           </div>
-        ))}
-      </div>
+        </SortableContext>
+      </DndContext>
       {resumeData.skills.length === 0 && (
         <div className="text-center py-10 px-4 rounded-2xl border-2 border-dashed border-border/60">
           <Wrench className="h-10 w-10 text-muted-foreground/40 mx-auto mb-2" />
