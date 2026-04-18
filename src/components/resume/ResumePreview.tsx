@@ -33,14 +33,50 @@ const ResumePreview = () => {
   }, []);
 
   const handleExportPDF = async () => {
-    if (!previewRef.current) return;
-    const canvas = await html2canvas(previewRef.current, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`${resumeData.personalInfo.fullName || "resume"}.pdf`);
+    if (!previewRef.current || !wrapRef.current) return;
+
+    // Temporarily adjust styles for full-size capture
+    const originalTransform = previewRef.current.style.transform;
+    const originalHeight = wrapRef.current.style.height;
+
+    previewRef.current.style.transform = 'scale(1)';
+    wrapRef.current.style.height = `${PAGE_H}px`;
+
+    try {
+      const canvas = await html2canvas(previewRef.current, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
+      const imgData = canvas.toDataURL("image/png");
+
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      if (imgHeight <= pdfHeight) {
+        // Fits on one page
+        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      } else {
+        // Multi-page
+        let yPosition = 0;
+        const pageHeight = pdfHeight;
+        while (yPosition < imgHeight) {
+          const remainingHeight = imgHeight - yPosition;
+          const currentPageHeight = Math.min(pageHeight, remainingHeight);
+          pdf.addImage(imgData, "PNG", 0, -yPosition, imgWidth, imgHeight);
+          yPosition += pageHeight;
+          if (yPosition < imgHeight) {
+            pdf.addPage();
+          }
+        }
+      }
+
+      pdf.save(`${resumeData.personalInfo.fullName || "resume"}.pdf`);
+    } finally {
+      // Restore original styles
+      previewRef.current.style.transform = originalTransform;
+      wrapRef.current.style.height = originalHeight;
+    }
   };
 
   const renderTemplate = () => {
