@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Education } from "@/types/resume";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, GraduationCap } from "lucide-react";
 
 const EducationForm = () => {
   const { resumeData, setResumeData } = useResume();
@@ -11,12 +11,7 @@ const EducationForm = () => {
   const addEducation = () => {
     const newEdu: Education = {
       id: crypto.randomUUID(),
-      institution: "",
-      degree: "",
-      field: "",
-      startDate: "",
-      endDate: "",
-      gpa: "",
+      institution: "", degree: "", field: "", startDate: "", endDate: "", gpa: "",
     };
     setResumeData((prev) => ({ ...prev, education: [...prev.education, newEdu] }));
   };
@@ -33,50 +28,59 @@ const EducationForm = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground">Education</h3>
-        <Button onClick={addEducation} size="sm" variant="outline">
-          <Plus className="h-4 w-4 mr-1" /> Add
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-primary/10">
+            <GraduationCap className="h-4 w-4 text-primary" />
+          </div>
+          <h3 className="text-lg font-display font-semibold">Education</h3>
+        </div>
+        <Button onClick={addEducation} size="sm" className="gradient-bg text-primary-foreground rounded-full gap-1 shadow-soft">
+          <Plus className="h-4 w-4" /> Add
         </Button>
       </div>
-      {resumeData.education.map((edu) => (
-        <div key={edu.id} className="p-4 rounded-lg border border-border space-y-3 bg-card">
-          <div className="flex justify-end">
-            <Button variant="ghost" size="icon" onClick={() => removeEducation(edu.id)}>
+      {resumeData.education.map((edu, idx) => (
+        <div key={edu.id} className="relative p-4 sm:p-5 rounded-2xl border border-border/60 bg-card shadow-soft animate-fade-in space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-primary uppercase tracking-wider">#{idx + 1}</span>
+            <Button variant="ghost" size="icon" onClick={() => removeEducation(edu.id)} className="h-8 w-8 hover:bg-destructive/10">
               <Trash2 className="h-4 w-4 text-destructive" />
             </Button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label>Institution</Label>
-              <Input value={edu.institution} onChange={(e) => updateEducation(edu.id, "institution", e.target.value)} placeholder="University name" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label className="text-xs text-muted-foreground">Institution</Label>
+              <Input value={edu.institution} onChange={(e) => updateEducation(edu.id, "institution", e.target.value)} placeholder="University name" className="rounded-xl bg-background" />
             </div>
-            <div className="space-y-1">
-              <Label>Degree</Label>
-              <Input value={edu.degree} onChange={(e) => updateEducation(edu.id, "degree", e.target.value)} placeholder="Bachelor of Science" />
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Degree</Label>
+              <Input value={edu.degree} onChange={(e) => updateEducation(edu.id, "degree", e.target.value)} placeholder="Bachelor of Science" className="rounded-xl bg-background" />
             </div>
-            <div className="space-y-1">
-              <Label>Field of Study</Label>
-              <Input value={edu.field} onChange={(e) => updateEducation(edu.id, "field", e.target.value)} placeholder="Computer Science" />
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Field of Study</Label>
+              <Input value={edu.field} onChange={(e) => updateEducation(edu.id, "field", e.target.value)} placeholder="Computer Science" className="rounded-xl bg-background" />
             </div>
-            <div className="space-y-1">
-              <Label>GPA</Label>
-              <Input value={edu.gpa} onChange={(e) => updateEducation(edu.id, "gpa", e.target.value)} placeholder="3.8/4.0" />
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Start Date</Label>
+              <Input type="month" value={edu.startDate} onChange={(e) => updateEducation(edu.id, "startDate", e.target.value)} className="rounded-xl bg-background" />
             </div>
-            <div className="space-y-1">
-              <Label>Start Date</Label>
-              <Input type="month" value={edu.startDate} onChange={(e) => updateEducation(edu.id, "startDate", e.target.value)} />
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">End Date</Label>
+              <Input type="month" value={edu.endDate} onChange={(e) => updateEducation(edu.id, "endDate", e.target.value)} className="rounded-xl bg-background" />
             </div>
-            <div className="space-y-1">
-              <Label>End Date</Label>
-              <Input type="month" value={edu.endDate} onChange={(e) => updateEducation(edu.id, "endDate", e.target.value)} />
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label className="text-xs text-muted-foreground">GPA (optional)</Label>
+              <Input value={edu.gpa} onChange={(e) => updateEducation(edu.id, "gpa", e.target.value)} placeholder="3.8/4.0" className="rounded-xl bg-background" />
             </div>
           </div>
         </div>
       ))}
       {resumeData.education.length === 0 && (
-        <p className="text-sm text-muted-foreground text-center py-4">No education added yet. Click "Add" to get started.</p>
+        <div className="text-center py-10 px-4 rounded-2xl border-2 border-dashed border-border/60">
+          <GraduationCap className="h-10 w-10 text-muted-foreground/40 mx-auto mb-2" />
+          <p className="text-sm text-muted-foreground">No education added yet. Click "Add" to get started.</p>
+        </div>
       )}
     </div>
   );

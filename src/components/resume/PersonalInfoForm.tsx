@@ -2,6 +2,7 @@ import { useResume } from "@/context/ResumeContext";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { User } from "lucide-react";
 
 const PersonalInfoForm = () => {
   const { resumeData, setResumeData } = useResume();
@@ -14,38 +15,48 @@ const PersonalInfoForm = () => {
     }));
   };
 
+  const fields = [
+    { key: "fullName", label: "Full Name", placeholder: "John Doe" },
+    { key: "email", label: "Email", placeholder: "john@example.com", type: "email" },
+    { key: "phone", label: "Phone", placeholder: "+1 234 567 890" },
+    { key: "address", label: "Location", placeholder: "City, Country" },
+    { key: "linkedin", label: "LinkedIn", placeholder: "linkedin.com/in/johndoe" },
+    { key: "website", label: "Website", placeholder: "johndoe.com" },
+  ];
+
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-foreground">Personal Information</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="fullName">Full Name</Label>
-          <Input id="fullName" value={personalInfo.fullName} onChange={(e) => update("fullName", e.target.value)} placeholder="John Doe" />
+    <div className="space-y-5">
+      <div className="flex items-center gap-2">
+        <div className="p-1.5 rounded-lg bg-primary/10">
+          <User className="h-4 w-4 text-primary" />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" value={personalInfo.email} onChange={(e) => update("email", e.target.value)} placeholder="john@example.com" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="phone">Phone</Label>
-          <Input id="phone" value={personalInfo.phone} onChange={(e) => update("phone", e.target.value)} placeholder="+1 234 567 890" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="address">Address</Label>
-          <Input id="address" value={personalInfo.address} onChange={(e) => update("address", e.target.value)} placeholder="City, Country" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="linkedin">LinkedIn</Label>
-          <Input id="linkedin" value={personalInfo.linkedin} onChange={(e) => update("linkedin", e.target.value)} placeholder="linkedin.com/in/johndoe" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="website">Website</Label>
-          <Input id="website" value={personalInfo.website} onChange={(e) => update("website", e.target.value)} placeholder="johndoe.com" />
-        </div>
+        <h3 className="text-lg font-display font-semibold">Personal Information</h3>
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="summary">Professional Summary</Label>
-        <Textarea id="summary" value={personalInfo.summary} onChange={(e) => update("summary", e.target.value)} placeholder="A brief summary about yourself..." rows={4} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {fields.map((f) => (
+          <div key={f.key} className="space-y-1.5">
+            <Label htmlFor={f.key} className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{f.label}</Label>
+            <Input
+              id={f.key}
+              type={f.type || "text"}
+              value={(personalInfo as any)[f.key]}
+              onChange={(e) => update(f.key, e.target.value)}
+              placeholder={f.placeholder}
+              className="rounded-xl border-border/60 bg-card focus:border-primary transition-colors"
+            />
+          </div>
+        ))}
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="summary" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Professional Summary</Label>
+        <Textarea
+          id="summary"
+          value={personalInfo.summary}
+          onChange={(e) => update("summary", e.target.value)}
+          placeholder="A brief, compelling summary about yourself..."
+          rows={4}
+          className="rounded-xl border-border/60 bg-card focus:border-primary transition-colors resize-none"
+        />
       </div>
     </div>
   );
