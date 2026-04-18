@@ -41,4 +41,4 @@ export interface ResumeData {
   skills: Skill[];
 }
 
-export type TemplateType = "classic" | "modern" | "minimal";
+export type TemplateType = "classic" | "modern" | "minimal" | "professional" | "creative";

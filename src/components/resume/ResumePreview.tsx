@@ -3,6 +3,8 @@ import { useResume } from "@/context/ResumeContext";
 import ClassicTemplate from "./templates/ClassicTemplate";
 import ModernTemplate from "./templates/ModernTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
+import ProfessionalTemplate from "./templates/ProfessionalTemplate";
+import CreativeTemplate from "./templates/CreativeTemplate";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Download, Layout } from "lucide-react";
@@ -45,6 +47,8 @@ const ResumePreview = () => {
     switch (template) {
       case "modern": return <ModernTemplate data={resumeData} />;
       case "minimal": return <MinimalTemplate data={resumeData} />;
+      case "professional": return <ProfessionalTemplate data={resumeData} />;
+      case "creative": return <CreativeTemplate data={resumeData} />;
       default: return <ClassicTemplate data={resumeData} />;
     }
   };
