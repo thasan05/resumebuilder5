@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Experience } from "@/types/resume";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Briefcase } from "lucide-react";
 
 const ExperienceForm = () => {
   const { resumeData, setResumeData } = useResume();
@@ -13,12 +13,7 @@ const ExperienceForm = () => {
   const addExperience = () => {
     const newExp: Experience = {
       id: crypto.randomUUID(),
-      company: "",
-      position: "",
-      startDate: "",
-      endDate: "",
-      current: false,
-      description: "",
+      company: "", position: "", startDate: "", endDate: "", current: false, description: "",
     };
     setResumeData((prev) => ({ ...prev, experience: [...prev.experience, newExp] }));
   };
@@ -35,50 +30,59 @@ const ExperienceForm = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground">Experience</h3>
-        <Button onClick={addExperience} size="sm" variant="outline">
-          <Plus className="h-4 w-4 mr-1" /> Add
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-primary/10">
+            <Briefcase className="h-4 w-4 text-primary" />
+          </div>
+          <h3 className="text-lg font-display font-semibold">Work Experience</h3>
+        </div>
+        <Button onClick={addExperience} size="sm" className="gradient-bg text-primary-foreground rounded-full gap-1 shadow-soft">
+          <Plus className="h-4 w-4" /> Add
         </Button>
       </div>
-      {resumeData.experience.map((exp) => (
-        <div key={exp.id} className="p-4 rounded-lg border border-border space-y-3 bg-card">
-          <div className="flex justify-end">
-            <Button variant="ghost" size="icon" onClick={() => removeExperience(exp.id)}>
+      {resumeData.experience.map((exp, idx) => (
+        <div key={exp.id} className="relative p-4 sm:p-5 rounded-2xl border border-border/60 bg-card shadow-soft animate-fade-in space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-primary uppercase tracking-wider">#{idx + 1}</span>
+            <Button variant="ghost" size="icon" onClick={() => removeExperience(exp.id)} className="h-8 w-8 hover:bg-destructive/10">
               <Trash2 className="h-4 w-4 text-destructive" />
             </Button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label>Company</Label>
-              <Input value={exp.company} onChange={(e) => updateExperience(exp.id, "company", e.target.value)} placeholder="Company name" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Company</Label>
+              <Input value={exp.company} onChange={(e) => updateExperience(exp.id, "company", e.target.value)} placeholder="Company name" className="rounded-xl bg-background" />
             </div>
-            <div className="space-y-1">
-              <Label>Position</Label>
-              <Input value={exp.position} onChange={(e) => updateExperience(exp.id, "position", e.target.value)} placeholder="Software Engineer" />
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Position</Label>
+              <Input value={exp.position} onChange={(e) => updateExperience(exp.id, "position", e.target.value)} placeholder="Software Engineer" className="rounded-xl bg-background" />
             </div>
-            <div className="space-y-1">
-              <Label>Start Date</Label>
-              <Input type="month" value={exp.startDate} onChange={(e) => updateExperience(exp.id, "startDate", e.target.value)} />
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Start Date</Label>
+              <Input type="month" value={exp.startDate} onChange={(e) => updateExperience(exp.id, "startDate", e.target.value)} className="rounded-xl bg-background" />
             </div>
-            <div className="space-y-1">
-              <Label>End Date</Label>
-              <Input type="month" value={exp.endDate} onChange={(e) => updateExperience(exp.id, "endDate", e.target.value)} disabled={exp.current} />
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">End Date</Label>
+              <Input type="month" value={exp.endDate} onChange={(e) => updateExperience(exp.id, "endDate", e.target.value)} disabled={exp.current} className="rounded-xl bg-background" />
             </div>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 px-1">
             <Checkbox id={`current-${exp.id}`} checked={exp.current} onCheckedChange={(checked) => updateExperience(exp.id, "current", !!checked)} />
-            <Label htmlFor={`current-${exp.id}`} className="text-sm">Currently working here</Label>
+            <Label htmlFor={`current-${exp.id}`} className="text-sm cursor-pointer">Currently working here</Label>
           </div>
-          <div className="space-y-1">
-            <Label>Description</Label>
-            <Textarea value={exp.description} onChange={(e) => updateExperience(exp.id, "description", e.target.value)} placeholder="Describe your responsibilities and achievements..." rows={3} />
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">Description</Label>
+            <Textarea value={exp.description} onChange={(e) => updateExperience(exp.id, "description", e.target.value)} placeholder="Describe your responsibilities and achievements..." rows={3} className="rounded-xl bg-background resize-none" />
           </div>
         </div>
       ))}
       {resumeData.experience.length === 0 && (
-        <p className="text-sm text-muted-foreground text-center py-4">No experience added yet. Click "Add" to get started.</p>
+        <div className="text-center py-10 px-4 rounded-2xl border-2 border-dashed border-border/60">
+          <Briefcase className="h-10 w-10 text-muted-foreground/40 mx-auto mb-2" />
+          <p className="text-sm text-muted-foreground">No experience added yet. Click "Add" to get started.</p>
+        </div>
       )}
     </div>
   );

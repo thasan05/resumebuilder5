@@ -1,10 +1,9 @@
 import { useResume } from "@/context/ResumeContext";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skill } from "@/types/resume";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Wrench } from "lucide-react";
 
 const SkillsForm = () => {
   const { resumeData, setResumeData } = useResume();
@@ -26,38 +25,49 @@ const SkillsForm = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground">Skills</h3>
-        <Button onClick={addSkill} size="sm" variant="outline">
-          <Plus className="h-4 w-4 mr-1" /> Add
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-primary/10">
+            <Wrench className="h-4 w-4 text-primary" />
+          </div>
+          <h3 className="text-lg font-display font-semibold">Skills</h3>
+        </div>
+        <Button onClick={addSkill} size="sm" className="gradient-bg text-primary-foreground rounded-full gap-1 shadow-soft">
+          <Plus className="h-4 w-4" /> Add
         </Button>
       </div>
-      {resumeData.skills.map((skill) => (
-        <div key={skill.id} className="flex items-center gap-3">
-          <div className="flex-1 space-y-1">
-            <Input value={skill.name} onChange={(e) => updateSkill(skill.id, "name", e.target.value)} placeholder="Skill name" />
-          </div>
-          <div className="w-40">
+      <div className="space-y-2">
+        {resumeData.skills.map((skill) => (
+          <div key={skill.id} className="flex items-center gap-2 p-2 rounded-xl border border-border/60 bg-card shadow-soft animate-fade-in">
+            <Input
+              value={skill.name}
+              onChange={(e) => updateSkill(skill.id, "name", e.target.value)}
+              placeholder="Skill name"
+              className="flex-1 rounded-lg border-0 bg-background"
+            />
             <Select value={skill.level} onValueChange={(val) => updateSkill(skill.id, "level", val)}>
-              <SelectTrigger>
+              <SelectTrigger className="w-28 sm:w-36 rounded-lg border-0 bg-background">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 <SelectItem value="beginner">Beginner</SelectItem>
                 <SelectItem value="intermediate">Intermediate</SelectItem>
                 <SelectItem value="advanced">Advanced</SelectItem>
                 <SelectItem value="expert">Expert</SelectItem>
               </SelectContent>
             </Select>
+            <Button variant="ghost" size="icon" onClick={() => removeSkill(skill.id)} className="h-9 w-9 shrink-0 hover:bg-destructive/10">
+              <Trash2 className="h-4 w-4 text-destructive" />
+            </Button>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => removeSkill(skill.id)}>
-            <Trash2 className="h-4 w-4 text-destructive" />
-          </Button>
-        </div>
-      ))}
+        ))}
+      </div>
       {resumeData.skills.length === 0 && (
-        <p className="text-sm text-muted-foreground text-center py-4">No skills added yet. Click "Add" to get started.</p>
+        <div className="text-center py-10 px-4 rounded-2xl border-2 border-dashed border-border/60">
+          <Wrench className="h-10 w-10 text-muted-foreground/40 mx-auto mb-2" />
+          <p className="text-sm text-muted-foreground">No skills added yet. Click "Add" to get started.</p>
+        </div>
       )}
     </div>
   );
