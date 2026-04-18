@@ -63,28 +63,30 @@ const SkillsForm = () => {
               <SortableItem
                 key={skill.id}
                 id={skill.id}
-                className="relative flex items-center gap-2 pl-8 pr-2 py-2 rounded-xl border border-border/60 bg-card shadow-soft animate-fade-in"
+                className="relative flex flex-wrap sm:flex-nowrap items-center gap-2 pl-8 pr-2 py-2 rounded-xl border border-border/60 bg-card shadow-soft animate-fade-in"
               >
                 <Input
                   value={skill.name}
                   onChange={(e) => updateSkill(skill.id, "name", e.target.value)}
                   placeholder="Skill name"
-                  className="flex-1 rounded-lg border-0 bg-background"
+                  className="flex-1 min-w-[140px] rounded-lg border-0 bg-background"
                 />
-                <Select value={skill.level} onValueChange={(val) => updateSkill(skill.id, "level", val)}>
-                  <SelectTrigger className="w-28 sm:w-36 rounded-lg border-0 bg-background">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-xl">
-                    <SelectItem value="beginner">Beginner</SelectItem>
-                    <SelectItem value="intermediate">Intermediate</SelectItem>
-                    <SelectItem value="advanced">Advanced</SelectItem>
-                    <SelectItem value="expert">Expert</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button variant="ghost" size="icon" onClick={() => removeSkill(skill.id)} className="h-9 w-9 shrink-0 hover:bg-destructive/10">
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
+                <div className="flex items-center gap-2 ml-auto sm:ml-0">
+                  <Select value={skill.level} onValueChange={(val) => updateSkill(skill.id, "level", val)}>
+                    <SelectTrigger className="w-32 sm:w-36 rounded-lg border-0 bg-background">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="beginner">Beginner</SelectItem>
+                      <SelectItem value="intermediate">Intermediate</SelectItem>
+                      <SelectItem value="advanced">Advanced</SelectItem>
+                      <SelectItem value="expert">Expert</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button variant="ghost" size="icon" onClick={() => removeSkill(skill.id)} className="h-9 w-9 shrink-0 hover:bg-destructive/10">
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
               </SortableItem>
             ))}
           </div>
