@@ -115,4 +115,32 @@
   .shadow-soft {
     box-shadow: var(--shadow-soft);
   }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Prevent iOS auto-zoom on input focus by ensuring 16px min font on small screens */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select,
+  .resume-input {
+    font-size: 16px !important;
+  }
+}
+
+/* Resume preview: scale to fit narrow viewports */
+.resume-page {
+  width: 595px;
+  transform-origin: top center;
+}
+@media (max-width: 640px) {
+  .resume-page-wrap {
+    width: 100%;
+    overflow: hidden;
+  }
+  .resume-page {
+    transform: scale(var(--resume-scale, 1));
+  }
 }
