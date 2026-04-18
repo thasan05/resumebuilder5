@@ -66,6 +66,8 @@ const ResumePreview = () => {
               <SelectItem value="classic">✦ Classic</SelectItem>
               <SelectItem value="modern">◆ Modern</SelectItem>
               <SelectItem value="minimal">○ Minimal</SelectItem>
+              <SelectItem value="professional">▲ Professional</SelectItem>
+              <SelectItem value="creative">✺ Creative</SelectItem>
             </SelectContent>
           </Select>
         </div>
