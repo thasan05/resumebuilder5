@@ -1,73 +1,96 @@
-# Welcome to your Lovable project
+# Dynamic Resume Builder
 
-## Project info
+A browser-based resume builder with live preview, multiple templates, and one-click PDF export — built with React, TypeScript, Vite, and Tailwind CSS.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Overview
 
-## How can I edit this code?
+Fill in your personal details, education, experience, and skills through a form-driven interface and watch the resume render in real time beside you. Pick from five layout templates and export the finished result as a PDF. Everything runs client-side — no backend, no account, no data leaving the browser.
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+- **Live preview** — the resume updates as you type (`components/resume/ResumePreview.tsx`)
+- **Five templates** — Classic, Modern, Minimal, Creative, and Professional
+- **Structured sections** — personal info, education, experience, and skills, each with its own form
+- **Drag-and-drop reordering** of entries via `@dnd-kit` (`SortableItem.tsx`)
+- **PDF export** using `jspdf` + `html2canvas`
+- **Dark/light theming** (`context/ThemeContext.tsx`)
+- **Client-side only** — no server, no database, no data collection
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+| Area | Technology |
+|---|---|
+| Framework | React 18 + TypeScript |
+| Build tool | Vite |
+| Styling | Tailwind CSS + shadcn/ui (Radix primitives) |
+| Forms | React Hook Form + Zod |
+| State | React Context (`ResumeContext`) |
+| PDF export | jsPDF + html2canvas |
+| Drag & drop | @dnd-kit |
+| Testing | Vitest + Testing Library |
 
-**Use your preferred IDE**
+## Project Structure
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```
+src/
+├── components/
+│   ├── resume/
+│   │   ├── PersonalInfoForm.tsx
+│   │   ├── EducationForm.tsx
+│   │   ├── ExperienceForm.tsx
+│   │   ├── SkillsForm.tsx
+│   │   ├── ResumePreview.tsx
+│   │   ├── SortableItem.tsx
+│   │   └── templates/     # Classic, Modern, Minimal, Creative, Professional
+│   └── ui/                # shadcn/ui components
+├── context/               # ResumeContext (resume data), ThemeContext (dark/light)
+├── pages/                 # Index, NotFound
+├── types/resume.ts        # PersonalInfo, Education, Experience, Skill, ResumeData
+└── test/                  # Vitest setup and tests
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Getting Started
 
-Follow these steps:
+### Prerequisites
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Node.js and npm ([install via nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Installation
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+git clone https://github.com/thasan05/resumebuilder5.git
+cd resumebuilder5
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Vite will print the local dev URL (default `http://localhost:5173`).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Scripts
 
-**Use GitHub Codespaces**
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Start the dev server |
+| `npm run build` | Production build |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint |
+| `npm run test` | Run the test suite once |
+| `npm run test:watch` | Run tests in watch mode |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Deployment
 
-## What technologies are used for this project?
+The build output is a static bundle — deploy the `dist/` folder to any static host (Vercel, Netlify, GitHub Pages, Cloudflare Pages).
 
-This project is built with:
+```bash
+npm run build   # outputs to dist/
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Known Limitations
 
-## How can I deploy this project?
+- Resume data lives in React state only; refreshing the page clears the form (no persistence layer).
+- PDF export renders the preview via html2canvas, so very long resumes may paginate imperfectly.
+- Test coverage is minimal — the suite is scaffolded but sparse.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## Author
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Tanvir Hasan — Computer Science undergraduate, American International University-Bangladesh (AIUB)
